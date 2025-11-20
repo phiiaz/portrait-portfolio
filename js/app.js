@@ -24,12 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightboxImg = lightbox.querySelector('img');
     const closeBtn = document.querySelector('.lightbox-close');
 
-    document.querySelectorAll('.gallery-item img').forEach(img => {
-        img.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent bubbling
-            lightboxImg.src = img.src;
-            lightbox.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Disable scrolling
+    document.querySelectorAll('.gallery-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            const img = item.querySelector('img');
+            if (img) {
+                lightboxImg.src = img.src;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Disable scrolling
+            }
         });
     });
 
