@@ -135,6 +135,19 @@ a:hover {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+.hero-social-icon {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 2rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.hero-social-icon:hover {
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
