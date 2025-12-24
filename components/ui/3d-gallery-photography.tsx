@@ -169,11 +169,13 @@ function ImagePlane({
     position,
     scale,
     material,
+    onClick,
 }: {
     texture: THREE.Texture;
     position: [number, number, number];
     scale: [number, number, number];
     material: THREE.ShaderMaterial;
+    onClick?: () => void;
 }) {
     const meshRef = useRef<THREE.Mesh>(null);
     const [isHovered, setIsHovered] = useState(false);
@@ -198,6 +200,7 @@ function ImagePlane({
             material={material}
             onPointerEnter={() => setIsHovered(true)}
             onPointerLeave={() => setIsHovered(false)}
+            onClick={onClick}
         >
             <planeGeometry args={[1, 1, 32, 32]} />
         </mesh>
@@ -217,7 +220,8 @@ function GalleryScene({
         blurOut: { start: 0.9, end: 1.0 },
         maxBlur: 3.0,
     },
-}: Omit<InfiniteGalleryProps, 'className' | 'style'>) {
+    onImageClick,
+}: Omit<InfiniteGalleryProps, 'className' | 'style'> & { onImageClick?: (index: number) => void }) {
     const [scrollVelocity, setScrollVelocity] = useState(0);
     const [autoPlay, setAutoPlay] = useState(true);
     const lastInteraction = useRef(Date.now());
@@ -551,6 +555,7 @@ function GalleryScene({
                         position={[plane.x, plane.y, worldZ]} // Position planes relative to camera center
                         scale={scale}
                         material={material}
+                        onClick={() => onImageClick?.(plane.imageIndex)}
                     />
                 );
             })}
@@ -602,6 +607,17 @@ export default function InfiniteGallery({
     },
 }: InfiniteGalleryProps) {
     const [webglSupported, setWebglSupported] = useState(true);
+    const [lightboxOpen, setLightboxOpen] = useState(false);
+    const [lightboxIndex, setLightboxIndex] = useState(0);
+
+    // Normalize images to objects
+    const normalizedImages = useMemo(
+        () =>
+            images.map((img) =>
+                typeof img === 'string' ? { src: img, alt: '' } : img
+            ),
+        [images]
+    );
 
     useEffect(() => {
         // Check WebGL support
@@ -617,6 +633,37 @@ export default function InfiniteGallery({
         }
     }, []);
 
+    // Lightbox keyboard navigation
+    useEffect(() => {
+        if (!lightboxOpen) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                setLightboxOpen(false);
+            } else if (e.key === 'ArrowLeft') {
+                setLightboxIndex((prev) =>
+                    prev === 0 ? normalizedImages.length - 1 : prev - 1
+                );
+            } else if (e.key === 'ArrowRight') {
+                setLightboxIndex((prev) =>
+                    prev === normalizedImages.length - 1 ? 0 : prev + 1
+                );
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [lightboxOpen, normalizedImages.length]);
+
+    const openLightbox = useCallback((index: number) => {
+        setLightboxIndex(index);
+        setLightboxOpen(true);
+    }, []);
+
+    const closeLightbox = useCallback(() => {
+        setLightboxOpen(false);
+    }, []);
+
     if (!webglSupported) {
         return (
             <div className={className} style={style}>
@@ -626,17 +673,76 @@ export default function InfiniteGallery({
     }
 
     return (
-        <div className={className} style={style}>
-            <Canvas
-                camera={{ position: [0, 0, 0], fov: 55 }}
-                gl={{ antialias: true, alpha: true }}
-            >
-                <GalleryScene
-                    images={images}
-                    fadeSettings={fadeSettings}
-                    blurSettings={blurSettings}
-                />
-            </Canvas>
-        </div>
+        <>
+            <div className={className} style={style}>
+                <Canvas
+                    camera={{ position: [0, 0, 0], fov: 55 }}
+                    gl={{ antialias: true, alpha: true }}
+                >
+                    <GalleryScene
+                        images={images}
+                        fadeSettings={fadeSettings}
+                        blurSettings={blurSettings}
+                        onImageClick={openLightbox}
+                    />
+                </Canvas>
+            </div>
+
+            {/* Lightbox */}
+            {lightboxOpen && (
+                <div
+                    className="fixed inset-0 z-50 bg-black bg-opacity-95 flex items-center justify-center"
+                    onClick={closeLightbox}
+                >
+                    {/* Close button */}
+                    <button
+                        onClick={closeLightbox}
+                        className="absolute top-4 right-4 md:top-8 md:right-8 text-white text-4xl md:text-5xl font-light hover:text-gray-300 transition-colors z-10 w-12 h-12 flex items-center justify-center"
+                        aria-label="Close lightbox"
+                    >
+                        ×
+                    </button>
+
+                    {/* Image */}
+                    <img
+                        src={normalizedImages[lightboxIndex]?.src}
+                        alt={normalizedImages[lightboxIndex]?.alt || 'Fullscreen image'}
+                        className="max-w-[90vw] max-h-[90vh] object-contain"
+                        onClick={(e) => e.stopPropagation()}
+                    />
+
+                    {/* Navigation arrows */}
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setLightboxIndex((prev) =>
+                                prev === 0 ? normalizedImages.length - 1 : prev - 1
+                            );
+                        }}
+                        className="absolute left-4 md:left-8 text-white text-4xl md:text-5xl font-light hover:text-gray-300 transition-colors"
+                        aria-label="Previous image"
+                    >
+                        ‹
+                    </button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setLightboxIndex((prev) =>
+                                prev === normalizedImages.length - 1 ? 0 : prev + 1
+                            );
+                        }}
+                        className="absolute right-4 md:right-8 text-white text-4xl md:text-5xl font-light hover:text-gray-300 transition-colors"
+                        aria-label="Next image"
+                    >
+                        ›
+                    </button>
+
+                    {/* Image counter */}
+                    <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 text-white text-sm md:text-base">
+                        {lightboxIndex + 1} / {normalizedImages.length}
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
