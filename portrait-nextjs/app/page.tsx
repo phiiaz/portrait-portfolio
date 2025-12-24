@@ -1,7 +1,17 @@
 import InfiniteGallery from "@/components/ui/3d-gallery-photography"
 
 export default function Home() {
-  const sampleImages = [
+  // Fisher-Yates shuffle algorithm to randomize array
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const shuffled = [...array]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    return shuffled
+  }
+
+  const allImages = [
     { src: "/images/001.jpeg", alt: "Portrait 1" },
     { src: "/images/002.jpeg", alt: "Portrait 2" },
     { src: "/images/003.jpeg", alt: "Portrait 3" },
@@ -34,6 +44,9 @@ export default function Home() {
     { src: "/images/030.jpeg", alt: "Portrait 30" },
     { src: "/images/031.JPG", alt: "Portrait 31" },
   ]
+
+  // Randomize the order of images
+  const sampleImages = shuffleArray(allImages)
 
   return (
     <main className="min-h-screen w-full">
