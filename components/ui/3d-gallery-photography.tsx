@@ -319,18 +319,75 @@ function GalleryScene({
         [speed]
     );
 
+    // Handle touch input for mobile
+    const touchStart = useRef<{ x: number; y: number; time: number } | null>(null);
+
+    const handleTouchStart = useCallback((event: TouchEvent) => {
+        const touch = event.touches[0];
+        if (touch) {
+            touchStart.current = {
+                x: touch.clientX,
+                y: touch.clientY,
+                time: Date.now(),
+            };
+        }
+    }, []);
+
+    const handleTouchMove = useCallback(
+        (event: TouchEvent) => {
+            if (!touchStart.current) return;
+
+            const touch = event.touches[0];
+            if (!touch) return;
+
+            const deltaY = touchStart.current.y - touch.clientY;
+            const deltaX = touchStart.current.x - touch.clientX;
+
+            // Only handle vertical swipes (ignore horizontal)
+            if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                event.preventDefault();
+                setScrollVelocity((prev) => prev + deltaY * 0.05 * speed);
+                setAutoPlay(false);
+                lastInteraction.current = Date.now();
+
+                // Update touch start for continuous swiping
+                touchStart.current = {
+                    x: touch.clientX,
+                    y: touch.clientY,
+                    time: Date.now(),
+                };
+            }
+        },
+        [speed]
+    );
+
+    const handleTouchEnd = useCallback(() => {
+        touchStart.current = null;
+    }, []);
+
     useEffect(() => {
         const canvas = document.querySelector('canvas');
         if (canvas) {
+            // Mouse wheel
             canvas.addEventListener('wheel', handleWheel, { passive: false });
+
+            // Keyboard
             document.addEventListener('keydown', handleKeyDown);
+
+            // Touch events for mobile
+            canvas.addEventListener('touchstart', handleTouchStart, { passive: true });
+            canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+            canvas.addEventListener('touchend', handleTouchEnd, { passive: true });
 
             return () => {
                 canvas.removeEventListener('wheel', handleWheel);
                 document.removeEventListener('keydown', handleKeyDown);
+                canvas.removeEventListener('touchstart', handleTouchStart);
+                canvas.removeEventListener('touchmove', handleTouchMove);
+                canvas.removeEventListener('touchend', handleTouchEnd);
             };
         }
-    }, [handleWheel, handleKeyDown]);
+    }, [handleWheel, handleKeyDown, handleTouchStart, handleTouchMove, handleTouchEnd]);
 
     // Auto-play logic
     useEffect(() => {

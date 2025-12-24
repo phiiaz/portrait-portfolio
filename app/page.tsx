@@ -65,7 +65,7 @@ export default function Home() {
       </div>
 
       <div className="text-center fixed bottom-10 left-0 right-0 font-mono uppercase text-[11px] font-semibold">
-        <p>Use mouse wheel, arrow keys, or touch to navigate</p>
+        <p>Use mouse wheel, arrow keys, or swipe to navigate</p>
         <p className="opacity-60">Auto-play resumes after 3 seconds of inactivity</p>
       </div>
     </main>
