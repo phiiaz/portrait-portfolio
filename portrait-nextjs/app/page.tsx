@@ -2,42 +2,37 @@ import InfiniteGallery from "@/components/ui/3d-gallery-photography"
 
 export default function Home() {
   const sampleImages = [
-    {
-      src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1200&auto=format&fit=crop",
-      alt: "Portrait 1",
-    },
-    {
-      src: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1200&auto=format&fit=crop",
-      alt: "Portrait 2",
-    },
-    {
-      src: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1200&auto=format&fit=crop",
-      alt: "Portrait 3",
-    },
-    {
-      src: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1200&auto=format&fit=crop",
-      alt: "Portrait 4",
-    },
-    {
-      src: "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=1200&auto=format&fit=crop",
-      alt: "Portrait 5",
-    },
-    {
-      src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1200&auto=format&fit=crop",
-      alt: "Portrait 6",
-    },
-    {
-      src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1200&auto=format&fit=crop",
-      alt: "Portrait 7",
-    },
-    {
-      src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1200&auto=format&fit=crop",
-      alt: "Portrait 8",
-    },
-    {
-      src: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1200&auto=format&fit=crop",
-      alt: "Portrait 9",
-    },
+    { src: "/images/001.jpeg", alt: "Portrait 1" },
+    { src: "/images/002.jpeg", alt: "Portrait 2" },
+    { src: "/images/003.jpeg", alt: "Portrait 3" },
+    { src: "/images/004.jpeg", alt: "Portrait 4" },
+    { src: "/images/005.jpeg", alt: "Portrait 5" },
+    { src: "/images/006.jpeg", alt: "Portrait 6" },
+    { src: "/images/007.jpeg", alt: "Portrait 7" },
+    { src: "/images/008.jpeg", alt: "Portrait 8" },
+    { src: "/images/009.jpeg", alt: "Portrait 9" },
+    { src: "/images/010.jpeg", alt: "Portrait 10" },
+    { src: "/images/011.jpeg", alt: "Portrait 11" },
+    { src: "/images/012.jpeg", alt: "Portrait 12" },
+    { src: "/images/013.jpeg", alt: "Portrait 13" },
+    { src: "/images/014.jpeg", alt: "Portrait 14" },
+    { src: "/images/015.jpeg", alt: "Portrait 15" },
+    { src: "/images/016.jpeg", alt: "Portrait 16" },
+    { src: "/images/017.jpeg", alt: "Portrait 17" },
+    { src: "/images/018.jpeg", alt: "Portrait 18" },
+    { src: "/images/019.jpeg", alt: "Portrait 19" },
+    { src: "/images/020.jpeg", alt: "Portrait 20" },
+    { src: "/images/021.jpeg", alt: "Portrait 21" },
+    { src: "/images/022.jpeg", alt: "Portrait 22" },
+    { src: "/images/023.jpeg", alt: "Portrait 23" },
+    { src: "/images/024.jpeg", alt: "Portrait 24" },
+    { src: "/images/025.jpeg", alt: "Portrait 25" },
+    { src: "/images/026.jpeg", alt: "Portrait 26" },
+    { src: "/images/027.jpeg", alt: "Portrait 27" },
+    { src: "/images/028.jpeg", alt: "Portrait 28" },
+    { src: "/images/029.jpeg", alt: "Portrait 29" },
+    { src: "/images/030.jpeg", alt: "Portrait 30" },
+    { src: "/images/031.JPG", alt: "Portrait 31" },
   ]
 
   return (
