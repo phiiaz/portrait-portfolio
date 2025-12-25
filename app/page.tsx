@@ -1,4 +1,5 @@
 import InfiniteGallery from "@/components/ui/3d-gallery-photography"
+import { Instagram } from "lucide-react"
 
 export default function Home() {
   // Fisher-Yates shuffle algorithm to randomize array
@@ -65,6 +66,17 @@ export default function Home() {
       </div>
 
       <div className="text-center fixed bottom-10 left-0 right-0 font-mono uppercase text-[11px] font-semibold">
+        <div className="flex justify-center mb-4">
+          <a
+            href="https://www.instagram.com/portraitbyphiiaz/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pointer-events-auto transition-all duration-300 hover:scale-110 hover:opacity-70"
+            aria-label="Visit Instagram profile"
+          >
+            <Instagram className="w-6 h-6" />
+          </a>
+        </div>
         <p>Use mouse wheel, arrow keys, or swipe to navigate</p>
         <p className="opacity-60">Auto-play resumes after 3 seconds of inactivity</p>
       </div>
