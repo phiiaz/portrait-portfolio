@@ -655,6 +655,56 @@ export default function InfiniteGallery({
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [lightboxOpen, normalizedImages.length]);
 
+    // Lightbox touch/swipe navigation
+    useEffect(() => {
+        if (!lightboxOpen) return;
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+
+        const handleTouchStart = (e: TouchEvent) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        };
+
+        const handleTouchEnd = (e: TouchEvent) => {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        };
+
+        const handleSwipe = () => {
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            const minSwipeDistance = 50;
+
+            // Only handle horizontal swipes (ignore vertical)
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+                if (deltaX > 0) {
+                    // Swipe right - go to previous image
+                    setLightboxIndex((prev) =>
+                        prev === 0 ? normalizedImages.length - 1 : prev - 1
+                    );
+                } else {
+                    // Swipe left - go to next image
+                    setLightboxIndex((prev) =>
+                        prev === normalizedImages.length - 1 ? 0 : prev + 1
+                    );
+                }
+            }
+        };
+
+        window.addEventListener('touchstart', handleTouchStart);
+        window.addEventListener('touchend', handleTouchEnd);
+
+        return () => {
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchend', handleTouchEnd);
+        };
+    }, [lightboxOpen, normalizedImages.length]);
+
     const openLightbox = useCallback((index: number) => {
         setLightboxIndex(index);
         setLightboxOpen(true);
