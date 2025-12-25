@@ -1,11 +1,8 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: 10 10 10;
+  --color-foreground: 240 240 240;
   --font-sans: var(--font-inter);
   --font-serif: var(--font-playfair);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -119,6 +116,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
