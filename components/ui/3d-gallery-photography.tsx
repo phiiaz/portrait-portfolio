@@ -633,6 +633,26 @@ export default function InfiniteGallery({
         }
     }, []);
 
+    // Prevent body scroll when lightbox is open
+    useEffect(() => {
+        if (lightboxOpen) {
+            // Save current scroll position
+            const scrollY = window.scrollY;
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = '100%';
+        } else {
+            // Restore scroll position
+            const scrollY = document.body.style.top;
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
+    }, [lightboxOpen]);
+
     // Lightbox keyboard navigation
     useEffect(() => {
         if (!lightboxOpen) return;
@@ -741,7 +761,8 @@ export default function InfiniteGallery({
             {/* Lightbox */}
             {lightboxOpen && (
                 <div
-                    className="fixed inset-0 z-50 bg-black bg-opacity-95 flex items-center justify-center"
+                    className="fixed inset-0 z-50 bg-black bg-opacity-95 flex items-center justify-center overflow-hidden"
+                    style={{ touchAction: 'none' }}
                     onClick={closeLightbox}
                 >
                     {/* Close button */}
